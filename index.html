@@ -6,8 +6,28 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>·CALEB·</title>
+
+    <!-- ===== 添加 manifest.json（iOS 主屏幕必须） ===== -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- ===== OneSignal 推送 SDK ===== -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "59369c5b-35df-498e-95d7-4d16aca871fa",
+          safari_web_id: "web.onesignal.auto.2ccd5ae7-3528-4a1e-96f6-138881299499",
+          notifyButton: {
+            enable: true,
+          },
+        });
+      });
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* 此处省略全部样式（保持不变） */
         * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         html, body { width:100%; height:100%; background:#f5f5f5; overflow:hidden; margin:0; padding:0; }
         #app { width:100%; height:100%; background:#ffffff; display:flex; flex-direction:column; position:relative; overflow:hidden; padding-top:env(safe-area-inset-top,0); box-sizing:border-box; }
@@ -120,9 +140,8 @@
         .top-bar .left .info .name { font-weight:600; color:#333 !important; }
         .top-bar .left .info .status { color:#888 !important; }
         .top-bar .right i { color:#555 !important; }
-        /* 修改：使用 background-color 避免覆盖背景图片 */
         .chat-area {
-            background-color: #ffffff !important;  /* 只设置背景色，不覆盖背景图 */
+            background-color: #ffffff !important;
             margin: 6px 22px 0 22px !important;
             border-radius: 16px !important;
             box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
@@ -132,7 +151,6 @@
             display: flex !important;
             flex-direction: column !important;
             gap: 12px !important;
-            /* 保留背景图相关属性，由内联样式控制 */
         }
         .bottom-bar { background: transparent !important; border-top: none !important; padding-bottom:8px !important; }
         .bottom-input { background:transparent !important; padding:6px 12px !important; }
@@ -236,7 +254,7 @@
     <style id="customGlobalStyle"></style><style id="customBubbleStyle"></style>
 </div>
 <script>
-// ===== JavaScript =====
+// ===== JavaScript（完整保留，未改动） =====
 const PRESET_WORD_GROUPS = {
     "称呼": ["宝宝","老婆","乖宝宝","乖老婆","媳妇儿"],
     "回应": ["哥哥在","在呢在呢","来了来了","在游戏上","听到了"],
@@ -493,7 +511,6 @@ function simulatePartnerReply(force, isActive) {
         replyTimer = null;
     }
     if(!force && Math.random()<DATA.settings.ignoreRate) {
-        // 修改：显示对方名字
         const now = getBeijingTime();
         DATA.messages.push({ from:'system', text:`${DATA.partner.name}已读不回`, time:formatHM(now), fullTime:formatFullTime(now) });
         saveData();
