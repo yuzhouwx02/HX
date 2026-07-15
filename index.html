@@ -12,17 +12,58 @@
 
     <!-- 2. OneSignal 推送 SDK（使用你的新 ID + 指定子路径 Worker） -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "59369c5b-35df-498e-95d7-4d16aca871fa",
-          safari_web_id: "web.onesignal.auto.2ccd5ae7-3528-4a1e-96f6-138881299499",
-          notifyButton: { enable: true },
-          serviceWorkerPath: "./OneSignalSDKWorker.js"  // 关键：让它在当前文件夹找 Worker
-        });
-      });
-    </script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    // 1. 初始化（你的ID都在里面，没变）
+    await OneSignal.init({
+      appId: "59369c5b-35df-498e-95d7-4d16aca871fa",
+      safari_web_id: "web.onesignal.auto.2ccd5ae7-3528-4a1e-96f6-138881299499",
+      notifyButton: { enable: true },
+      serviceWorkerPath: "./OneSignalSDKWorker.js"
+    });
+
+    // 2. 如果手机系统已经点了“允许”，立刻尝试向服务器报到
+    if (Notification.permission === "granted") {
+      await OneSignal.registerForPushNotifications();
+    }
+
+    // 3. 弹出系统订阅框（如果还没弹的话）
+    OneSignal.showSlidedown({ force: true });
+
+    // 4. 【★★★★★ 终极必杀技 ★★★★★】
+    // 等页面加载完，在右下角创建一个超明显的“蓝色按钮”
+    setTimeout(function() {
+      const btn = document.createElement('button');
+      btn.innerText = '🔔 点我强制注册推送';
+      btn.style.position = 'fixed';
+      btn.style.bottom = '120px';      // 放在底部，不会被输入框挡住
+      btn.style.right = '20px';
+      btn.style.zIndex = '9999';
+      btn.style.padding = '14px 22px';
+      btn.style.background = '#007aff';
+      btn.style.color = 'white';
+      btn.style.border = 'none';
+      btn.style.borderRadius = '40px';
+      btn.style.fontSize = '16px';
+      btn.style.fontWeight = 'bold';
+      btn.style.boxShadow = '0 6px 20px rgba(0,122,255,0.5)';
+      btn.style.cursor = 'pointer';
+      
+      // 点击按钮后，强制向 OneSignal 后台发送注册信号
+      btn.onclick = async function() {
+        this.innerText = '⏳ 注册中...';
+        this.style.background = '#ff9500';
+        await OneSignal.registerForPushNotifications();
+        this.innerText = '✅ 已发送！';
+        this.style.background = '#34c759';
+        alert('✅ 注册指令已发出！请立即去 OneSignal 后台首页刷新，看 Total Subscribers 是否变成了 1！');
+      };
+      
+      document.body.appendChild(btn);
+    }, 1000); // 延迟1秒确保页面加载完毕
+  });
+</script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
