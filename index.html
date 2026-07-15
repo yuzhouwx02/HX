@@ -7,10 +7,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>·CALEB·</title>
 
-    <!-- manifest.json -->
-    <link rel="manifest" href="/项目名/manifest.json"> <!-- 注意：如果仓库名是项目名，这里要写 /项目名/manifest.json，如果根目录就是项目文件夹，相对路径 "manifest.json" 也可，建议改为 "./manifest.json" -->
+    <!-- 1. manifest 路径用 ./ 开头，适配子路径 -->
+    <link rel="manifest" href="./manifest.json">
 
-    <!-- OneSignal 推送 SDK（新 ID + 添加 serviceWorkerPath） -->
+    <!-- 2. OneSignal 推送 SDK（使用你的新 ID + 指定子路径 Worker） -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -19,7 +19,7 @@
           appId: "59369c5b-35df-498e-95d7-4d16aca871fa",
           safari_web_id: "web.onesignal.auto.2ccd5ae7-3528-4a1e-96f6-138881299499",
           notifyButton: { enable: true },
-          serviceWorkerPath: "./OneSignalSDKWorker.js"  // 关键！让 Worker 在当前子路径注册
+          serviceWorkerPath: "./OneSignalSDKWorker.js"  // 关键：让它在当前文件夹找 Worker
         });
       });
     </script>
