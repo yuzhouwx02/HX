@@ -10,63 +10,20 @@
     <!-- 1. manifest 路径用 ./ 开头，适配子路径 -->
     <link rel="manifest" href="./manifest.json">
 
-    <!-- 2. OneSignal 推送 SDK（使用你的新 ID + 指定子路径 Worker） -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <!-- OneSignal 官方SDK（必须要有！） -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
+<!-- OneSignal 初始化代码 -->
 <script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "59369c5b-35df-498e-95d7-4d16aca871fa",
-      safari_web_id: "web.onesignal.auto.2ccd5ae7-3528-4a1e-96f6-138881299499",
-      notifyButton: { enable: true },
-      // ========== 关键修改 ==========
-      // 强制指定 Worker 文件在项目子路径下
-      serviceWorkerPath: "/HX/OneSignalSDKWorker.js",  // 把 CALEB 换成你的项目文件夹名
-      path: "/HX/"  // 告诉 SDK 所有资源从项目子路径加载
-      // ==============================
-    });
-
-    // 强制弹窗
-    await OneSignal.showSlidedown({ force: true });
-
-    // 如果权限已允许，强制注册
-    if (Notification.permission === "granted") {
-      await OneSignal.registerForPushNotifications();
-    }
-
-    // ---------- 诊断按钮 ----------
-    setTimeout(() => {
-      const btn = document.createElement('button');
-      btn.innerText = '🔍 诊断订阅';
-      btn.style.position = 'fixed';
-      btn.style.bottom = '180px';
-      btn.style.right = '20px';
-      btn.style.zIndex = '9999';
-      btn.style.padding = '12px 20px';
-      btn.style.background = '#ff9500';
-      btn.style.color = 'white';
-      btn.style.border = 'none';
-      btn.style.borderRadius = '40px';
-      btn.style.fontSize = '14px';
-      btn.style.fontWeight = 'bold';
-      btn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-      btn.style.cursor = 'pointer';
-
-      btn.onclick = async function() {
-        const permission = Notification.permission;
-        const subscription = await OneSignal.User.pushSubscription;
-        const id = subscription ? subscription.id : '❌ 无ID（未注册）';
-        alert(
-          '📊 诊断结果：\n\n' +
-          '1. 系统通知权限：' + permission + '\n' +
-          '2. OneSignal 用户ID：' + id + '\n\n' +
-          (id.includes('无ID') ? '⚠️ 未注册，请确保从主屏幕图标打开网站！' : '✅ 已注册！去后台发推送试试')
-        );
-      };
-      document.body.appendChild(btn);
-    }, 1500);
-
+window.OneSignal = window.OneSignal || [];
+OneSignal.push(function() {
+  OneSignal.init({
+    appId: "59369c5b-35df-498e-95d7-4d16aca871fa",
+    serviceWorkerPath: "/HX/OneSignalSDKWorker.js",
+    serviceWorkerUpdaterPath: "/HX/OneSignalSDKUpdaterWorker.js",
+    allowLocalhostAsSecureOrigin: true
   });
+});
 </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
