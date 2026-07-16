@@ -1334,5 +1334,19 @@ window.addEventListener('resize', function() {
 });
 console.log('✅ CALEB 更新：已读不回显示对方名字，壁纸上传修复');
 </script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+window.OneSignal = window.OneSignal || [];
+OneSignal.push(function() {
+  OneSignal.init({
+    appId: "59369c5b-35df-498e-95d7-4d16aca871fa",
+    serviceWorkerPath: "/HX/OneSignalSDKWorker.js",
+    serviceWorkerUpdaterPath: "/HX/OneSignalSDKUpdaterWorker.js",
+    // 新增关键配置：注册作用域！！适配github子路径
+    serviceWorkerRegistrationScope: "/HX/",
+    allowLocalhostAsSecureOrigin: true
+  });
+});
+</script>
 </body>
 </html>
