@@ -31,6 +31,20 @@ OneSignal.push(function() {
   });
 });
 </script>
+    <script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "59369c5b-35df-498e-95d7-4d16aca871fa",
+      safari_web_id: "web.onesignal.auto.2ccd5ae7-3528-4a1e-96f6-138881299499",
+      // 关键：指定 Worker 在子目录下的完整路径（相对于域名根）
+      serviceWorkerPath: "/HX/OneSignalSDKWorker.js",
+      // 指定 Worker 的作用域，确保消息路由到子目录
+      serviceWorkerParam: { scope: "/HX/" },
+      notifyButton: { enable: true }
+    });
+  });
+</script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
